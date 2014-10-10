@@ -10,29 +10,25 @@
 
      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.groovy.springbatch.batch"/>
+    <!--<context:component-scan base-package="com.groovy.springbatch.batch"/>-->
 
     <!--Load our properties file-->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="batch.properties"/>
     </bean>
 
-    <!-- Initialize the database before every test case: -->
-    <bean id="dataSourceInitializer" class="org.springframework.batch.test.DataSourceInitializer">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="initScripts">
-            <list>
-                <value>${batch.drop.script}</value>
-                <value>${batch.schema.script}</value>
-            </list>
-        </property>
+    <bean class="java.net.URI" id="dbUrl">
+        <constructor-arg value="${DATABASE_URL}"/>
     </bean>
 
-    <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource">
-        <property name="driverClass" value="${batch.jdbc.driver}"/>
-        <property name="jdbcUrl" value="${batch.jdbc.url}"/>
-        <property name="username" value="${batch.jdbc.user}"/>
-        <property name="password" value="${batch.jdbc.password}"/>
+    <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <property name="driverClass" value="org.postgresql.Driver"/>
+        <property name="jdbcUrl"
+                  value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() +
+                  '?sslfactory=org.postgresql.ssl.NonValidatingFactory&amp;ssl=true'}"/>
+        <property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
+        <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
+        <property name="connectionTestStatement" value="SELECT 1"/>
     </bean>
 
     <bean id="transactionManager"
@@ -45,7 +41,7 @@
           class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="transactionManager" ref="transactionManager"/>
-        <property name="databaseType" value="H2"/>
+        <property name="databaseType" value="POSTGRES"/>
     </bean>
 
     <bean id="jobLauncher"
@@ -53,32 +49,47 @@
         <property name="jobRepository" ref="jobRepository"/>
     </bean>
 
-    <bean id="personItemReader"
-          class="org.springframework.batch.item.database.JdbcCursorItemReader">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="sql">
-            <value><![CDATA[SELECT * FROM Person;]]></value>
-        </property>
-        <property name="rowMapper">
-            <bean class="com.groovy.springbatch.domain.PersonRowMapper"/>
+    <bean id="stop" class="com.groovy.springbatch.domain.Stop" scope="prototype"/>
+
+    <bean id="stopItemReader"
+          class="org.springframework.batch.item.file.FlatFileItemReader">
+        <!-- Read a csv file -->
+        <property name="resource" value="classpath:gtfs/stops.txt"/>
+
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <!-- split it -->
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                        <property name="names"
+                                  value="id,name,desc,lat,lon,street,city,region,postcode,country,zoneid,wheelchairboarding,url"/>
+                    </bean>
+                </property>
+                <property name="fieldSetMapper">
+                    <!-- map to an object -->
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="prototypeBeanName" value="stop"/>
+                    </bean>
+                </property>
+
+            </bean>
         </property>
     </bean>
 
     <bean id="sheepItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"/>
         <property name="sql">
-            <value><![CDATA[INSERT INTO SHEEP VALUES(:id);]]></value>
+            <value><![CDATA[INSERT INTO STOP VALUES(:id);]]></value>
         </property>
         <property name="itemSqlParameterSourceProvider">
             <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"/>
         </property>
     </bean>
 
-    <batch:job id="PersonJob" restartable="false" job-repository="jobRepository">
+    <batch:job id="StopJob" restartable="false" job-repository="jobRepository">
         <batch:step id="step1">
             <tasklet>
-                <chunk reader="personItemReader"
-                       processor="personItemProcessor"
+                <chunk reader="stopItemReader"
                        writer="sheepItemWriter"
                        commit-interval="10"/>
                 <!--TODO Set appropriate commit-interval value-->

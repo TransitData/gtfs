@@ -4,3 +4,4 @@ helix-spring-batch.iml
 *.iml
 .ds_store
 .gradle
+src/main/resources/gtfs

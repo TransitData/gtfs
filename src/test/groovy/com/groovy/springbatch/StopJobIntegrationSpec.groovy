@@ -14,7 +14,7 @@ import spock.lang.Specification
         DependencyInjectionTestExecutionListener,
         StepScopeTestExecutionListener
 ])
-class PersonJobIntegrationSpec extends Specification {
+class StopJobIntegrationSpec extends Specification {
 
   @Autowired
   JobLauncherTestUtils jobLauncher

@@ -56,32 +56,47 @@
         <property name="jobRepository" ref="jobRepository"/>
     </bean>
 
-    <bean id="personItemReader"
-          class="org.springframework.batch.item.database.JdbcCursorItemReader">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="sql">
-            <value><![CDATA[SELECT ID FROM Person;]]></value>
-        </property>
-        <property name="rowMapper">
-            <bean class="com.groovy.springbatch.domain.PersonRowMapper"/>
+    <bean id="stop" class="com.groovy.springbatch.domain.Stop" scope="prototype"/>
+
+    <bean id="stopItemReader"
+          class="org.springframework.batch.item.file.FlatFileItemReader">
+        <!-- Read a csv file -->
+        <property name="resource" value="classpath:gtfs/stops.txt"/>
+
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <!-- split it -->
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                        <property name="names"
+                                  value="id,name,desc,lat,lon,street,city,region,postcode,country,zoneid,wheelchairboarding,url"/>
+                    </bean>
+                </property>
+                <property name="fieldSetMapper">
+                    <!-- map to an object -->
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="prototypeBeanName" value="stop"/>
+                    </bean>
+                </property>
+
+            </bean>
         </property>
     </bean>
 
     <bean id="sheepItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"/>
         <property name="sql">
-            <value><![CDATA[INSERT INTO SHEEP VALUES(:id);]]></value>
+            <value><![CDATA[INSERT INTO STOP VALUES(:id);]]></value>
         </property>
         <property name="itemSqlParameterSourceProvider">
             <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"/>
         </property>
     </bean>
 
-    <batch:job id="PersonJob" restartable="false" job-repository="jobRepository">
+    <batch:job id="StopJob" restartable="false" job-repository="jobRepository">
         <batch:step id="step1">
             <tasklet>
-                <chunk reader="personItemReader"
-                       processor="personItemProcessor"
+                <chunk reader="stopItemReader"
                        writer="sheepItemWriter"
                        commit-interval="10"/>
                 <!--TODO Set appropriate commit-interval value-->
