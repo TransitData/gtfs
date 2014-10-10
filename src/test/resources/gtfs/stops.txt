@@ -1,0 +1,8 @@
+stop_id,stop_name,stop_desc,stop_lat,stop_lon,stop_street,stop_city,stop_region,stop_postcode,stop_country,zone_id,wheelchair_boarding,stop_url
+1000,"50th St W & Upton Ave S","Near side E",  44.912365, -93.315178,"50th St W",MINNEAPOLIS,,,,,1,http://www.metrotransit.org/NexTripBadge.aspx?stopnumber=1000
+10000,"Carmen Ave & Claude Way E","Across from S",  44.857533, -93.041008,"Carmen Ave",INVER GROVE HEIGHTS,,,,,1,http://www.metrotransit.org/NexTripBadge.aspx?stopnumber=10000
+10001,"Carmen Ave & 65th St E","Far side S",  44.855000, -93.042488,"Carmen Ave",INVER GROVE HEIGHTS,,,,,1,http://www.metrotransit.org/NexTripBadge.aspx?stopnumber=10001
+10002,"Carmen Ave & Village Square Center","Near side S",  44.853642, -93.042244,"Carmen Ave",INVER GROVE HEIGHTS,,,,,1,http://www.metrotransit.org/NexTripBadge.aspx?stopnumber=10002
+10003,"Carmen Ave & Lake Bridge Apts","Across from E",  44.853397, -93.040787,"Carmen Ave",INVER GROVE HEIGHTS,,,,,2,http://www.metrotransit.org/NexTripBadge.aspx?stopnumber=10003
+10004,"67th St E & Catherine Ave","Across from E",  44.851719, -93.036842,"67th St E",INVER GROVE HEIGHTS,,,,,1,http://www.metrotransit.org/NexTripBadge.aspx?stopnumber=10004
+10005,"67th St E & Clayton Ave","Near side E",  44.851696, -93.034836,"67th St E",INVER GROVE HEIGHTS,,,,,1,http://www.metrotransit.org/NexTripBadge.aspx?stopnumber=10005
