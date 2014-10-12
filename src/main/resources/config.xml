@@ -49,7 +49,7 @@
         <property name="jobRepository" ref="jobRepository"/>
     </bean>
 
-    <bean id="stop" class="com.groovy.springbatch.domain.Stop" scope="prototype"/>
+    <bean id="stop" class="transitdata.io.domain.Stop" scope="prototype"/>
 
     <bean id="stopItemReader"
           class="org.springframework.batch.item.file.FlatFileItemReader">

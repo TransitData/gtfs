@@ -1,4 +1,4 @@
-package com.groovy.springbatch.domain
+package transitdata.io.domain
 
 import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode

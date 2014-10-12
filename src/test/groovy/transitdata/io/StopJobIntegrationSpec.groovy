@@ -1,4 +1,4 @@
-package com.groovy.springbatch
+package transitdata.io
 
 import org.springframework.batch.core.ExitStatus
 import org.springframework.batch.test.JobLauncherTestUtils
