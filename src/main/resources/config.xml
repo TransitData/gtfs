@@ -10,7 +10,7 @@
 
      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!--<context:component-scan base-package="com.groovy.springbatch.batch"/>-->
+    <context:component-scan base-package="transitdata.io.domain"/>
 
     <!--Load our properties file-->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -91,7 +91,7 @@
             <tasklet>
                 <chunk reader="stopItemReader"
                        writer="sheepItemWriter"
-                       commit-interval="10"/>
+                       commit-interval="10000"/>
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>
         </batch:step>

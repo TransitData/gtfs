@@ -13,7 +13,8 @@
     <!--Test only-->
     <bean class="org.springframework.batch.test.JobLauncherTestUtils"/>
 
-    <context:component-scan base-package="com.groovy.springbatch.batch"/>
+
+    <context:component-scan base-package="transitdata.io.domain"/>
 
     <!--Load our properties file-->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -62,6 +63,7 @@
           class="org.springframework.batch.item.file.FlatFileItemReader">
         <!-- Read a csv file -->
         <property name="resource" value="classpath:gtfs/stops.txt"/>
+        <property name="linesToSkip" value="1"/>
 
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -69,7 +71,10 @@
                 <property name="lineTokenizer">
                     <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
                         <property name="names"
-                                  value="id,name,desc,lat,lon,street,city,region,postcode,country,zoneid,wheelchairboarding,url"/>
+                                  value="stop_id, stop_name, stop_desc, stop_lat, stop_lon,
+                                        stop_street, stop_city, stop_region,
+                                        stop_postcode, stop_country, zone_id,
+                                        wheelchair_boarding, stop_url"/>
                     </bean>
                 </property>
                 <property name="fieldSetMapper">
@@ -86,7 +91,16 @@
     <bean id="sheepItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"/>
         <property name="sql">
-            <value><![CDATA[INSERT INTO STOP VALUES(:id);]]></value>
+            <value>
+                <![CDATA[
+                    INSERT INTO STOP VALUES(
+                     :stop_id, 'METRO_TRANSIT', :stop_id, :stop_code, :stop_name, :stop_desc,
+                     :stop_lat, :stop_lon, :stop_street, :stop_city, :stop_region,
+                     :stop_postcode,:stop_country, :zone_id, :stop_url,
+                     :location_type, :parent_station, :stop_timezone, :wheelchair_boarding
+                    );
+                ]]>
+            </value>
         </property>
         <property name="itemSqlParameterSourceProvider">
             <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"/>
@@ -98,7 +112,7 @@
             <tasklet>
                 <chunk reader="stopItemReader"
                        writer="sheepItemWriter"
-                       commit-interval="10"/>
+                       commit-interval="10000"/>
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>
         </batch:step>
