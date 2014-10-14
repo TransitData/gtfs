@@ -76,7 +76,7 @@
         </property>
     </bean>
 
-    <bean id="sheepItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+    <bean id="stopItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
         <property name="dataSource" ref="dataSource"/>
         <property name="sql">
             <value><![CDATA[INSERT INTO STOP VALUES(:id);]]></value>
@@ -90,7 +90,7 @@
         <batch:step id="step1">
             <tasklet>
                 <chunk reader="stopItemReader"
-                       writer="sheepItemWriter"
+                       writer="stopItemWriter"
                        commit-interval="10000"/>
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>

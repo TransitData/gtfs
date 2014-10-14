@@ -1,0 +1,24 @@
+route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color
+2-74,          0,2,"Franklin Av - Riverside Av - U of M - 8th St SE",,3,http://www.metrotransit.org/route/2,,000000
+3-74,          0,3,"U of M - Como Av - Energy Park Dr - Maryland Av",,3,http://www.metrotransit.org/route/3,,000000
+4-74,          0,4,"New Brighton - Johnson St - Bryant Av - Southtown",,3,http://www.metrotransit.org/route/4,,000000
+5-74,          0,5,"Brklyn Center - Fremont - 26th Av - Chicago - MOA",,3,http://www.metrotransit.org/route/5,,000000
+6-74,          0,6,"U of M - Hennepin - Xerxes - France - Southdale",,3,http://www.metrotransit.org/route/6,,000000
+7-74,          0,7,"Plymouth - 27Av - Midtown - 46St LRT - 34Av S",,3,http://www.metrotransit.org/route/7,,000000
+9-74,          0,9,"Glenwood Av - Wayzata Blvd - Cedar Lk Rd -46St LRT",,3,http://www.metrotransit.org/route/9,,000000
+10-74,          0,10,"Central Av - University Av - Northtown",,3,http://www.metrotransit.org/route/10,,000000
+11-74,          0,11,"Columbia Heights - 2nd St NE - 4th Av S",,3,http://www.metrotransit.org/route/11,,000000
+12-74,          0,12,"Uptown - Excelsior Blvd - Hopkins - Opus",,3,http://www.metrotransit.org/route/12,,000000
+14-74,          0,14,"Robbinsdale-West Broadway-Bloomington Av",,3,http://www.metrotransit.org/route/14,,000000
+16-74,          0,16,"U of M - University Av - Midway",,3,http://www.metrotransit.org/route/16,,000000
+17-74,          0,17,"Minnetonka Blvd - Uptown - Washington St NE",,3,http://www.metrotransit.org/route/17,,000000
+18-74,          0,18,"Nicollet Av - South Bloomington",,3,http://www.metrotransit.org/route/18,,000000
+19-74,          0,19,"Olson Memorial Hwy - Penn Av N - Brooklyn Center",,3,http://www.metrotransit.org/route/19,,000000
+20-74,          0,20,"Northstar Rail-Downtown Shuttle",,3,http://www.metrotransit.org/route/20,,000000
+21-74,          0,21,"Uptown - Lake St - Selby  Av",,3,http://www.metrotransit.org/route/21,,000000
+22-74,          0,22,"Brklyn Ctr - Lyndale Av N - Cedar - 28th Av S - VA",,3,http://www.metrotransit.org/route/22,,000000
+23-74,          0,23,"Uptown - 38th St - Highland Village",,3,http://www.metrotransit.org/route/23,,000000
+25-74,          0,25,"Northtown - Silver Lake - Stinson - Lake of Isles",,3,http://www.metrotransit.org/route/25,,000000
+27-74,          2,27,"Lake St Station-26/28St",,3,http://www.metrotransit.org/route/27,,000000
+30-74,          0,30,"Broadway Crosstown - Raymond Ave",,3,http://www.metrotransit.org/route/30,,000000
+32-74,          1,32,"Robbinsdale - Lowry Av - Rosedale",,3,http://www.metrotransit.org/route/32,,000000

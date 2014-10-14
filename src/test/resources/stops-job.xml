@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xsi:schemaLocation="http://www.springframework.org/schema/batch
+    http://www.springframework.org/schema/batch/spring-batch.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="test-config.xml"/>
+
+    <bean id="stop" class="transitdata.io.domain.Stop" scope="prototype"/>
+
+    <bean id="lineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+        <property name="strict" value="false"/>
+    </bean>
+
+    <bean id="stopsHeaderHandler" class="transitdata.io.batch.HeaderHandler"/>
+
+    <bean id="stopItemReader"
+          class="org.springframework.batch.item.file.FlatFileItemReader">
+        <!-- Read a csv file -->
+        <property name="resource" value="classpath:gtfs/stops.txt"/>
+
+        <property name="linesToSkip" value="1"/>
+        <property name="skippedLinesCallback" ref="stopsHeaderHandler"/>
+
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <!-- split it -->
+                <property name="lineTokenizer" ref="lineTokenizer"/>
+
+                <!-- map to an object -->
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="prototypeBeanName" value="stop"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="stopItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql">
+            <value>
+                <![CDATA[
+                    INSERT INTO STOP VALUES(
+                     :stop_id, 'METRO_TRANSIT', :stop_id, :stop_code, :stop_name, :stop_desc,
+                     :stop_lat, :stop_lon, :stop_street, :stop_city, :stop_region,
+                     :stop_postcode,:stop_country, :zone_id, :stop_url,
+                     :location_type, :parent_station, :stop_timezone, :wheelchair_boarding
+                    );
+                ]]>
+            </value>
+        </property>
+        <property name="itemSqlParameterSourceProvider">
+            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"/>
+        </property>
+    </bean>
+
+    <batch:job id="StopJob" restartable="false" job-repository="jobRepository">
+        <batch:step id="step1">
+            <tasklet>
+                <chunk reader="stopItemReader"
+                       writer="stopItemWriter"
+                       commit-interval="10000"/>
+                <!--TODO Set appropriate commit-interval value-->
+            </tasklet>
+        </batch:step>
+    </batch:job>
+</beans>

@@ -1,0 +1,12 @@
+route_id,service_id,trip_id,trip_headsign,block_id,shape_id,wheelchair_accessible
+766-74,AUG14-MVS-BUS-Weekday-01,7672288-AUG14-MVS-BUS-Weekday-01,"Northbound 766G Expess/Richardson PR/Via W River Rd",2070,7660002,1
+766-74,AUG14-MVS-BUS-Weekday-01,7672289-AUG14-MVS-BUS-Weekday-01,"Northbound 766G Expess/Richardson PR/Via W River Rd",2261,7660002,1
+766-74,AUG14-MVS-BUS-Weekday-01,7672290-AUG14-MVS-BUS-Weekday-01,"Northbound 766G Expess/Richardson PR/Via W River Rd",2264,7660002,1
+766-74,AUG14-MVS-BUS-Weekday-01,7672291-AUG14-MVS-BUS-Weekday-01,"Southbound 766X  Hwy 252-66 / Via W River Rd",2264,7660008,1
+766-74,AUG14-MVS-BUS-Weekday-01,7672293-AUG14-MVS-BUS-Weekday-01,"Southbound 766X  Hwy 252-66 / Via W River Rd",2263,7660008,1
+766-74,AUG14-MVS-BUS-Weekday-01,7672296-AUG14-MVS-BUS-Weekday-01,"Northbound 766G Expess/Richardson PR/Via W River Rd",2257,7660002,1
+766-74,AUG14-MVS-BUS-Weekday-01,7672297-AUG14-MVS-BUS-Weekday-01,"Southbound 766  Express / Downtown / Via W River Rd",2257,7660006,1
+766-74,AUG14-MVS-BUS-Weekday-01,7672298-AUG14-MVS-BUS-Weekday-01,"Northbound 766G Expess/Richardson PR/Via W River Rd",2250,7660003,1
+766-74,AUG14-MVS-BUS-Weekday-01,7672300-AUG14-MVS-BUS-Weekday-01,"Northbound 766G Expess/Richardson PR/Via W River Rd",2252,7660002,1
+766-74,AUG14-MVS-BUS-Weekday-01,7672301-AUG14-MVS-BUS-Weekday-01,"Southbound 766  Express / Downtown / Via W River Rd",2252,7660007,1
+766-74,AUG14-MVS-BUS-Weekday-01,7672305-AUG14-MVS-BUS-Weekday-01,"Northbound 766E  Express / Anoka / W River Rd",2259,7660005,1
