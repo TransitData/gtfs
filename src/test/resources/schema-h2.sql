@@ -102,7 +102,7 @@ CREATE TABLE calendar_date (
 );
 
 CREATE TABLE calendar (
-  id             BIGINT       NOT NULL PRIMARY KEY,
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
   transit_system VARCHAR(50)  NOT NULL,
   service_id     VARCHAR(255) NOT NULL,
   monday         INT          NOT NULL,

@@ -8,6 +8,7 @@ import groovy.transform.ToString
 @EqualsAndHashCode
 @CompileStatic
 class Stop {
+
     String id
     String transit_system
     String stop_id
@@ -27,5 +28,6 @@ class Stop {
     String parent_station
     String stop_timezone
     String wheelchair_boarding
+
 }
 

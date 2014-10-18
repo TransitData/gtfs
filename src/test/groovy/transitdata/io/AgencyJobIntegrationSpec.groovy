@@ -12,7 +12,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import spock.lang.Specification
 import transitdata.io.domain.Agency
 
-@ContextConfiguration('/agency-job.xml')
+@ContextConfiguration('/jobs/agency-job.xml')
 @TestExecutionListeners([
         DependencyInjectionTestExecutionListener,
         StepScopeTestExecutionListener

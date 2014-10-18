@@ -10,14 +10,14 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestExecutionListeners
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener
 import spock.lang.Specification
-import transitdata.io.domain.Stop
+import transitdata.io.domain.Calendar
 
-@ContextConfiguration('/jobs/stops-job.xml')
+@ContextConfiguration('/jobs/calendar-job.xml')
 @TestExecutionListeners([
         DependencyInjectionTestExecutionListener,
         StepScopeTestExecutionListener
 ])
-class StopJobIntegrationSpec extends Specification {
+class CalendarJobIntegrationSpec extends Specification {
 
     @Autowired
     JobLauncherTestUtils jobLauncher
@@ -38,28 +38,29 @@ class StopJobIntegrationSpec extends Specification {
 
     void 'launch job'() {
         given:
-        Stop expectedStop = new Stop(
-                stop_id: '1000',
-                stop_name: '50th St W & Upton Ave S',
-                stop_desc: 'Near side E',
-                stop_lat: 44.912365,
-                stop_lon: '-93.315178',
-                stop_street: '50th St W',
-                stop_city: 'MINNEAPOLIS'
+        Calendar expectedCalendar = new Calendar(
+                service_id: 'AUG14-MVS-BUS-Weekday-01',
+                monday: '1',
+                tuesday: '0',
+                wednesday: '1',
+                thursday: '0',
+                friday: '1',
+                saturday: '0',
+                sunday: '0',
+                start_date: '20141008',
+                end_date: '20141212',
         )
 
         when: 'job is run'
         def jobExecution = jobLauncher.launchJob()
-        List<Stop> stopList = jdbcTemplate.queryForList('select * from stop')
+        List<Calendar> calendarList = jdbcTemplate.queryForList('select * from calendar')
 
         then: 'it completes successfully (execution is synchronous, so we don\'t have to wait for completion)'
         jobExecution.exitStatus == ExitStatus.COMPLETED
 
         and:
-        stopList.size() == 7
-        stopList.first().stop_id == expectedStop.stop_id
-        stopList.first().stop_name == expectedStop.stop_name
-        stopList.first().stop_city == expectedStop.stop_city
+        calendarList.size() == 22
+        calendarList.first().service_id == expectedCalendar.service_id
+        calendarList.first().end_date == expectedCalendar.end_date
     }
-
 }
