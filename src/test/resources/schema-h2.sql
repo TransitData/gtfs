@@ -82,56 +82,56 @@ CREATE SEQUENCE BATCH_JOB_SEQ MAXVALUE 9223372036854775807 NO CYCLE;
 
 -- GTFS Data
 CREATE TABLE agency (
-  id              BIGINT       NOT NULL PRIMARY KEY,
-  transit_system  VARCHAR(50)  NOT NULL,
+  id              BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system  VARCHAR(50)           NOT NULL,
   agency_id       VARCHAR(100),
-  agency_name     VARCHAR(255) NOT NULL,
-  agency_url      VARCHAR(255) NOT NULL,
-  agency_timezone VARCHAR(100) NOT NULL,
+  agency_name     VARCHAR(255)          NOT NULL,
+  agency_url      VARCHAR(255)          NOT NULL,
+  agency_timezone VARCHAR(100)          NOT NULL,
   agency_lang     VARCHAR(100),
   agency_phone    VARCHAR(100),
   agency_fare_url VARCHAR(100)
 );
 
 CREATE TABLE calendar_date (
-  id             BIGINT       NOT NULL PRIMARY KEY,
-  transit_system VARCHAR(50)  NOT NULL,
-  service_id     VARCHAR(255) NOT NULL,
-  date           VARCHAR(8)   NOT NULL,
-  exception_type INT          NOT NULL
+  id             BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system VARCHAR(50)           NOT NULL,
+  service_id     VARCHAR(255)          NOT NULL,
+  date           VARCHAR(8)            NOT NULL,
+  exception_type INT                   NOT NULL
 );
 
 CREATE TABLE calendar (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  transit_system VARCHAR(50)  NOT NULL,
-  service_id     VARCHAR(255) NOT NULL,
-  monday         INT          NOT NULL,
-  tuesday        INT          NOT NULL,
-  wednesday      INT          NOT NULL,
-  thursday       INT          NOT NULL,
-  friday         INT          NOT NULL,
-  saturday       INT          NOT NULL,
-  sunday         INT          NOT NULL,
-  start_date     VARCHAR(8)   NOT NULL,
-  end_date       VARCHAR(8)   NOT NULL
+  id             BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system VARCHAR(50)           NOT NULL,
+  service_id     VARCHAR(255)          NOT NULL,
+  monday         INT                   NOT NULL,
+  tuesday        INT                   NOT NULL,
+  wednesday      INT                   NOT NULL,
+  thursday       INT                   NOT NULL,
+  friday         INT                   NOT NULL,
+  saturday       INT                   NOT NULL,
+  sunday         INT                   NOT NULL,
+  start_date     VARCHAR(8)            NOT NULL,
+  end_date       VARCHAR(8)            NOT NULL
 );
 
 CREATE TABLE fare_attribute (
-  id                BIGINT      NOT NULL PRIMARY KEY,
-  transit_system    VARCHAR(50) NOT NULL,
+  id                BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system    VARCHAR(50)           NOT NULL,
   fare_id           VARCHAR(100),
-  price             VARCHAR(50) NOT NULL,
-  currency_type     VARCHAR(50) NOT NULL,
-  payment_method    INT         NOT NULL,
-  transfers         INT         NOT NULL,
+  price             VARCHAR(50)           NOT NULL,
+  currency_type     VARCHAR(50)           NOT NULL,
+  payment_method    INT                   NOT NULL,
+  transfers         INT                   NOT NULL,
   transfer_duration VARCHAR(10),
-  exception_type    INT         NOT NULL,
+  exception_type    INT                   NOT NULL,
   agency_id         INT
 );
 
 CREATE TABLE fare_rule (
-  id             BIGINT      NOT NULL PRIMARY KEY,
-  transit_system VARCHAR(50) NOT NULL,
+  id             BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system VARCHAR(50)           NOT NULL,
   fare_id        VARCHAR(100),
   route_id       VARCHAR(100),
   origin_id      VARCHAR(100),
@@ -140,34 +140,34 @@ CREATE TABLE fare_rule (
 );
 
 CREATE TABLE feed_info (
-  id                  BIGINT       NOT NULL PRIMARY KEY,
-  transit_system      VARCHAR(50)  NOT NULL,
+  id                  BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system      VARCHAR(50)           NOT NULL,
   feed_publisher_name VARCHAR(100),
-  feed_publisher_url  VARCHAR(255) NOT NULL,
-  feed_lang           VARCHAR(255) NOT NULL,
+  feed_publisher_url  VARCHAR(255)          NOT NULL,
+  feed_lang           VARCHAR(255)          NOT NULL,
   feed_start_date     VARCHAR(8),
   feed_end_date       VARCHAR(8),
   feed_version        VARCHAR(100)
 );
 
 CREATE TABLE frequency (
-  id             BIGINT       NOT NULL PRIMARY KEY,
-  transit_system VARCHAR(50)  NOT NULL,
-  trip_id        VARCHAR(100) NOT NULL,
-  start_time     VARCHAR(8)   NOT NULL,
-  end_time       VARCHAR(8)   NOT NULL,
-  headway_secs   VARCHAR(100) NOT NULL,
+  id             BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system VARCHAR(50)           NOT NULL,
+  trip_id        VARCHAR(100)          NOT NULL,
+  start_time     VARCHAR(8)            NOT NULL,
+  end_time       VARCHAR(8)            NOT NULL,
+  headway_secs   VARCHAR(100)          NOT NULL,
   exact_times    INT
 );
 
 CREATE TABLE route (
-  id               BIGINT       NOT NULL PRIMARY KEY,
-  transit_system   VARCHAR(50)  NOT NULL,
+  id               BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system   VARCHAR(50)           NOT NULL,
   route_id         VARCHAR(100),
   agency_id        VARCHAR(50),
-  route_short_name VARCHAR(50)  NOT NULL,
-  route_long_name  VARCHAR(255) NOT NULL,
-  route_type       VARCHAR(2)   NOT NULL,
+  route_short_name VARCHAR(50)           NOT NULL,
+  route_long_name  VARCHAR(255)          NOT NULL,
+  route_type       VARCHAR(2)            NOT NULL,
   route_text_color VARCHAR(255),
   route_color      VARCHAR(255),
   route_url        VARCHAR(255),
@@ -175,25 +175,25 @@ CREATE TABLE route (
 );
 
 CREATE TABLE shape (
-  id                  BIGINT        NOT NULL PRIMARY KEY,
-  transit_system      VARCHAR(50)   NOT NULL,
-  shape_id            VARCHAR(100)  NOT NULL,
-  shape_pt_lat        DECIMAL(8, 6) NOT NULL,
-  shape_pt_lon        DECIMAL(8, 6) NOT NULL,
-  shape_pt_sequence   INT           NOT NULL,
+  id                  BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system      VARCHAR(50)           NOT NULL,
+  shape_id            VARCHAR(100)          NOT NULL,
+  shape_pt_lat        DECIMAL(8, 6)         NOT NULL,
+  shape_pt_lon        DECIMAL(8, 6)         NOT NULL,
+  shape_pt_sequence   INT                   NOT NULL,
   shape_dist_traveled VARCHAR(50)
 );
 
 CREATE TABLE stop_time (
-  id                     BIGINT       NOT NULL PRIMARY KEY,
-  transit_system         VARCHAR(50)  NOT NULL,
-  trip_id                VARCHAR(100) NOT NULL,
-  arrival_time           VARCHAR(8)   NOT NULL,
+  id                     BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system         VARCHAR(50)           NOT NULL,
+  trip_id                VARCHAR(100)          NOT NULL,
+  arrival_time           VARCHAR(8)            NOT NULL,
   arrival_time_seconds   INT,
-  departure_time         VARCHAR(8)   NOT NULL,
+  departure_time         VARCHAR(8)            NOT NULL,
   departure_time_seconds INT,
-  stop_id                VARCHAR(100) NOT NULL,
-  stop_sequence          VARCHAR(100) NOT NULL,
+  stop_id                VARCHAR(100)          NOT NULL,
+  stop_sequence          VARCHAR(100)          NOT NULL,
   stop_headsign          VARCHAR(50),
   pickup_type            VARCHAR(2),
   drop_off_type          VARCHAR(2),
@@ -201,14 +201,14 @@ CREATE TABLE stop_time (
 );
 
 CREATE TABLE stop (
-  id                  BIGINT         NOT NULL PRIMARY KEY,
-  transit_system      VARCHAR(50)    NOT NULL,
+  id                  BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system      VARCHAR(50)           NOT NULL,
   stop_id             VARCHAR(255),
   stop_code           VARCHAR(50),
-  stop_name           VARCHAR(255)   NOT NULL,
+  stop_name           VARCHAR(255)          NOT NULL,
   stop_desc           VARCHAR(255),
-  stop_lat            DECIMAL(10, 6) NOT NULL,
-  stop_lon            DECIMAL(10, 6) NOT NULL,
+  stop_lat            DECIMAL(10, 6)        NOT NULL,
+  stop_lon            DECIMAL(10, 6)        NOT NULL,
   stop_street         VARCHAR(255),
   stop_city           VARCHAR(255),
   stop_region         VARCHAR(255),
@@ -223,19 +223,19 @@ CREATE TABLE stop (
 );
 
 CREATE TABLE transfer (
-  id                BIGINT      NOT NULL PRIMARY KEY,
-  transit_system    VARCHAR(50) NOT NULL,
-  from_stop_id      INT         NOT NULL,
-  to_stop_id        VARCHAR(8)  NOT NULL,
-  transfer_type     INT         NOT NULL,
+  id                BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system    VARCHAR(50)           NOT NULL,
+  from_stop_id      INT                   NOT NULL,
+  to_stop_id        VARCHAR(8)            NOT NULL,
+  transfer_type     INT                   NOT NULL,
   min_transfer_time VARCHAR(100)
 );
 
 CREATE TABLE trip (
-  id                    BIGINT       NOT NULL PRIMARY KEY,
-  transit_system        VARCHAR(50)  NOT NULL,
-  route_id              VARCHAR(100) NOT NULL,
-  service_id            VARCHAR(100) NOT NULL,
+  id                    BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system        VARCHAR(50)           NOT NULL,
+  route_id              VARCHAR(100)          NOT NULL,
+  service_id            VARCHAR(100)          NOT NULL,
   trip_id               VARCHAR(255),
   trip_headsign         VARCHAR(255),
   trip_short_name       VARCHAR(255),

@@ -46,10 +46,10 @@
             <value>
                 <![CDATA[
                     INSERT INTO AGENCY(
-                    id, agency_id, transit_system,agency_name,agency_url,agency_timezone,agency_lang
+                    agency_id, transit_system,agency_name,agency_url,agency_timezone,agency_lang
                     )
                     VALUES(
-                     :agency_id,:agency_id,'METRO_TRANSIT',:agency_name,:agency_url,:agency_timezone,:agency_lang
+                     :agency_id,'METRO_TRANSIT',:agency_name,:agency_url,:agency_timezone,:agency_lang
                     );
                 ]]>
             </value>

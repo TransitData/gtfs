@@ -45,8 +45,11 @@
         <property name="sql">
             <value>
                 <![CDATA[
-                    INSERT INTO STOP VALUES(
-                     :stop_id, 'METRO_TRANSIT', :stop_id, :stop_code, :stop_name, :stop_desc,
+                    INSERT INTO STOP(transit_system,stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,
+                    stop_street,stop_city,stop_region,stop_postcode,stop_country,zone_id,stop_url,location_type,
+                    parent_station,stop_timezone,wheelchair_boarding)
+                     VALUES(
+                     'METRO_TRANSIT', :stop_id, :stop_code, :stop_name, :stop_desc,
                      :stop_lat, :stop_lon, :stop_street, :stop_city, :stop_region,
                      :stop_postcode,:stop_country, :zone_id, :stop_url,
                      :location_type, :parent_station, :stop_timezone, :wheelchair_boarding
