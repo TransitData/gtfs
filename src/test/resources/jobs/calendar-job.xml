@@ -8,56 +8,7 @@
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <import resource="../test-config.xml"/>
-
-    <bean id="calendar" class="transitdata.io.domain.Calendar" scope="prototype"/>
-
-    <bean id="lineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
-        <property name="strict" value="false"/>
-    </bean>
-
-    <bean id="calendarHeaderHandler" class="transitdata.io.batch.HeaderHandler"/>
-
-    <bean id="calendarItemReader"
-          class="org.springframework.batch.item.file.FlatFileItemReader">
-        <!-- Read a csv file -->
-        <property name="resource" value="classpath:gtfs/calendar.txt"/>
-
-        <property name="linesToSkip" value="1"/>
-        <property name="skippedLinesCallback" ref="calendarHeaderHandler"/>
-
-        <property name="lineMapper">
-            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
-                <!-- split it -->
-                <property name="lineTokenizer" ref="lineTokenizer"/>
-
-                <!-- map to an object -->
-                <property name="fieldSetMapper">
-                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
-                        <property name="prototypeBeanName" value="calendar"/>
-                    </bean>
-                </property>
-            </bean>
-        </property>
-    </bean>
-
-    <bean id="calendarItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="sql">
-            <value>
-                <![CDATA[
-                    INSERT INTO CALENDAR(
-                    service_id,transit_system,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date
-                    )
-                    VALUES(
-                     :service_id,'METRO_TRANSIT',:monday,:tuesday,:wednesday,:thursday,:friday,:saturday,:sunday,:start_date,:end_date
-                    );
-                ]]>
-            </value>
-        </property>
-        <property name="itemSqlParameterSourceProvider">
-            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"/>
-        </property>
-    </bean>
+    <import resource="../../main/calendar-config.xml"/>
 
     <batch:job id="CalendarJob" restartable="false" job-repository="jobRepository">
         <batch:step id="step1">

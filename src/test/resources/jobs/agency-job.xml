@@ -8,56 +8,7 @@
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <import resource="../test-config.xml"/>
-
-    <bean id="agency" class="transitdata.io.domain.Agency" scope="prototype"/>
-
-    <bean id="lineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
-        <property name="strict" value="false"/>
-    </bean>
-
-    <bean id="agencyHeaderHandler" class="transitdata.io.batch.HeaderHandler"/>
-
-    <bean id="agencyItemReader"
-          class="org.springframework.batch.item.file.FlatFileItemReader">
-        <!-- Read a csv file -->
-        <property name="resource" value="classpath:gtfs/agency.txt"/>
-
-        <property name="linesToSkip" value="1"/>
-        <property name="skippedLinesCallback" ref="agencyHeaderHandler"/>
-
-        <property name="lineMapper">
-            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
-                <!-- split it -->
-                <property name="lineTokenizer" ref="lineTokenizer"/>
-
-                <!-- map to an object -->
-                <property name="fieldSetMapper">
-                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
-                        <property name="prototypeBeanName" value="agency"/>
-                    </bean>
-                </property>
-            </bean>
-        </property>
-    </bean>
-
-    <bean id="agencyItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="sql">
-            <value>
-                <![CDATA[
-                    INSERT INTO AGENCY(
-                    agency_id, transit_system,agency_name,agency_url,agency_timezone,agency_lang
-                    )
-                    VALUES(
-                     :agency_id,'METRO_TRANSIT',:agency_name,:agency_url,:agency_timezone,:agency_lang
-                    );
-                ]]>
-            </value>
-        </property>
-        <property name="itemSqlParameterSourceProvider">
-            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"/>
-        </property>
-    </bean>
+    <import resource="../../main/agency-config.xml"/>
 
     <batch:job id="AgencyJob" restartable="false" job-repository="jobRepository">
         <batch:step id="step1">

@@ -52,7 +52,7 @@ codenarc {
 mainClassName = 'org.springframework.batch.core.launch.support.CommandLineJobRunner'
 
 run {
-  args 'config.xml', 'StopJob'
+  args 'config.xml', 'gtfsJob'
 }
 
 test {
