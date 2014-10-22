@@ -95,6 +95,7 @@ CREATE TABLE agency (
 
 CREATE TABLE calendar_date (
   id             BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  transit_system VARCHAR(50)           NOT NULL,
   service_id     VARCHAR(255)          NOT NULL,
   date           VARCHAR(8)            NOT NULL,
   exception_type INT                   NOT NULL

@@ -40,6 +40,7 @@ class CalendarDateJobIntegrationSpec extends Specification {
         given:
         CalendarDate expectedCalendarDate = new CalendarDate(
                 service_id: 'AUG14-MVS-BUS-Weekday-01',
+                transit_system: 'METRO_TRANSIT',
                 date: '20141127',
                 exception_type: 2
         )
@@ -55,6 +56,7 @@ class CalendarDateJobIntegrationSpec extends Specification {
         calendarDateList.size() == 26
         calendarDateList.first().service_id == expectedCalendarDate.service_id
         calendarDateList.first().date == expectedCalendarDate.date
+        calendarDateList.first().transit_system == expectedCalendarDate.transit_system
         calendarDateList.first().exception_type == expectedCalendarDate.exception_type
     }
 }

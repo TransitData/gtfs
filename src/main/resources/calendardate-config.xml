@@ -45,10 +45,10 @@
             <value>
                 <![CDATA[
                     INSERT INTO calendar_date(
-                     service_id,date,exception_type
+                     service_id,transit_system,date,exception_type
                     )
                     VALUES(
-                     :service_id,:date,:exception_type
+                     :service_id,'METRO_TRANSIT',:date,:exception_type
                     );
                 ]]>
             </value>
