@@ -10,14 +10,14 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestExecutionListeners
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener
 import spock.lang.Specification
-import transitdata.io.domain.Stop
+import transitdata.io.domain.Shape
 
-@ContextConfiguration('/jobs/stops-job.xml')
+@ContextConfiguration('/jobs/shapes-job.xml')
 @TestExecutionListeners([
         DependencyInjectionTestExecutionListener,
         StepScopeTestExecutionListener
 ])
-class StopJobIntegrationSpec extends Specification {
+class ShapeJobIntegrationSpec extends Specification {
 
     @Autowired
     JobLauncherTestUtils jobLauncher
@@ -38,32 +38,30 @@ class StopJobIntegrationSpec extends Specification {
 
     void 'launch job'() {
         given:
-        Stop expectedStop = new Stop(
-                stop_id: '1000',
-                stop_name: '50th St W & Upton Ave S',
-                stop_desc: 'Near side E',
-                stop_lat: 44.912365,
-                stop_lon: -93.315178,
-                stop_street: '50th St W',
-                stop_city: 'MINNEAPOLIS'
+        Shape expectedShape = new Shape(
+                transit_system : 'METRO_TRANSIT',
+                shape_id : '20001',
+                shape_pt_lat : '44.9617268795',
+                shape_pt_lon : '-93.2921253393',
+                shape_pt_sequence : new Integer(10001),
+                shape_dist_traveled : null
         )
 
         when: 'job is run'
         def jobExecution = jobLauncher.launchJob()
-        List<Stop> stopList = jdbcTemplate.queryForList('select * from stop')
+        List<Shape> shapeList = jdbcTemplate.queryForList('select * from shape')
 
         then: 'it completes successfully (execution is synchronous, so we don\'t have to wait for completion)'
         jobExecution.exitStatus == ExitStatus.COMPLETED
 
         and:
-        stopList.size() == 7
-        stopList.first().stop_id == expectedStop.stop_id
-        stopList.first().stop_name == expectedStop.stop_name
-        stopList.first().stop_desc == expectedStop.stop_desc
-        stopList.first().stop_lat == expectedStop.stop_lat
-        stopList.first().stop_lon == expectedStop.stop_lon
-        stopList.first().stop_street == expectedStop.stop_street
-        stopList.first().stop_city == expectedStop.stop_city
-    }
+        shapeList.size() == 18
+        shapeList.first().transit_system == expectedShape.transit_system
+        shapeList.first().shape_id == expectedShape.shape_id
+        shapeList.first().shape_pt_lat as String == expectedShape.shape_pt_lat
+        shapeList.first().shape_pt_lon as String == expectedShape.shape_pt_lon
+        shapeList.first().shape_pt_sequence == expectedShape.shape_pt_sequence
+        shapeList.first().shape_dist_traveled == expectedShape.shape_dist_traveled
 
+    }
 }
