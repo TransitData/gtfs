@@ -16,15 +16,13 @@
         <property name="strict" value="false"/>
     </bean>
 
-    <bean id="agencyHeaderHandler" class="transitdata.io.batch.HeaderHandler"/>
-
     <bean id="agencyItemReader"
           class="org.springframework.batch.item.file.FlatFileItemReader">
         <!-- Read a csv file -->
         <property name="resource" value="classpath:gtfs/agency.txt"/>
 
         <property name="linesToSkip" value="1"/>
-        <property name="skippedLinesCallback" ref="agencyHeaderHandler"/>
+        <property name="skippedLinesCallback" ref="headerHandler"/>
 
         <property name="lineMapper">
             <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">

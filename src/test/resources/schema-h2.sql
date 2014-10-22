@@ -162,7 +162,6 @@ CREATE TABLE frequency (
 
 CREATE TABLE route (
   id               BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  transit_system   VARCHAR(50)           NOT NULL,
   route_id         VARCHAR(100),
   agency_id        VARCHAR(50),
   route_short_name VARCHAR(50)           NOT NULL,
