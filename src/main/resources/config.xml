@@ -25,6 +25,8 @@
         <constructor-arg value="${DATABASE_URL}"/>
     </bean>
 
+    <bean id="headerHandler" class="transitdata.io.batch.HeaderHandler"/>
+
     <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
         <property name="driverClass" value="org.postgresql.Driver"/>
         <property name="jdbcUrl"
@@ -70,10 +72,18 @@
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>
         </batch:step>
-        <batch:step id="calendarStep">
+        <batch:step id="calendarStep" next="routeStep">
             <tasklet>
                 <chunk reader="calendarItemReader"
                        writer="calendarItemWriter"
+                       commit-interval="10000"/>
+                <!--TODO Set appropriate commit-interval value-->
+            </tasklet>
+        </batch:step>
+        <batch:step id="routeStep">
+            <tasklet>
+                <chunk reader="routeItemReader"
+                       writer="routeItemWriter"
                        commit-interval="10000"/>
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>
