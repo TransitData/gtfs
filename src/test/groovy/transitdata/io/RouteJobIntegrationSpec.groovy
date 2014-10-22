@@ -40,6 +40,7 @@ class RouteJobIntegrationSpec extends Specification {
         given:
         Route expectedRoute = new Route(
                 route_id : '2-74',
+                transit_system : 'METRO_TRANSIT',
                 agency_id : '0',
                 route_short_name : '2',
                 route_long_name : 'Franklin Av - Riverside Av - U of M - 8th St SE',
@@ -61,6 +62,7 @@ class RouteJobIntegrationSpec extends Specification {
         routeList.size() == 23
         routeList.first().route_id == expectedRoute.route_id
         routeList.first().agency_id == expectedRoute.agency_id
+        routeList.first().transit_system == expectedRoute.transit_system
         routeList.first().route_short_name == expectedRoute.route_short_name
         routeList.first().route_long_name == expectedRoute.route_long_name
         routeList.first().route_desc == expectedRoute.route_desc

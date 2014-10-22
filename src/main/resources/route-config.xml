@@ -45,10 +45,10 @@
             <value>
                 <![CDATA[
                     INSERT INTO route(
-                     route_id,agency_id,route_short_name,route_long_name,route_type,route_text_color,route_color,route_url,route_desc
+                     route_id,transit_system,agency_id,route_short_name,route_long_name,route_type,route_text_color,route_color,route_url,route_desc
                     )
                     VALUES(
-                     :route_id,:agency_id,:route_short_name,:route_long_name,:route_type,:route_text_color,:route_color,:route_url,:route_desc
+                     :route_id,'METRO_TRANSIT',:agency_id,:route_short_name,:route_long_name,:route_type,:route_text_color,:route_color,:route_url,:route_desc
                     );
                 ]]>
             </value>
