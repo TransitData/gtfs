@@ -12,6 +12,10 @@
 
     <context:component-scan base-package="transitdata.io.domain"/>
 
+    <import resource="agency-config.xml"/>
+    <import resource="stop-config.xml"/>
+    <import resource="calendar-config.xml"/>
+
     <!--Load our properties file-->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="batch.properties"/>
@@ -49,48 +53,27 @@
         <property name="jobRepository" ref="jobRepository"/>
     </bean>
 
-    <bean id="stop" class="transitdata.io.domain.Stop" scope="prototype"/>
-
-    <bean id="stopItemReader"
-          class="org.springframework.batch.item.file.FlatFileItemReader">
-        <!-- Read a csv file -->
-        <property name="resource" value="classpath:gtfs/stops.txt"/>
-
-        <property name="lineMapper">
-            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
-                <!-- split it -->
-                <property name="lineTokenizer">
-                    <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
-                        <property name="names"
-                                  value="id,name,desc,lat,lon,street,city,region,postcode,country,zoneid,wheelchairboarding,url"/>
-                    </bean>
-                </property>
-                <property name="fieldSetMapper">
-                    <!-- map to an object -->
-                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
-                        <property name="prototypeBeanName" value="stop"/>
-                    </bean>
-                </property>
-
-            </bean>
-        </property>
-    </bean>
-
-    <bean id="stopItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="sql">
-            <value><![CDATA[INSERT INTO STOP VALUES(:id);]]></value>
-        </property>
-        <property name="itemSqlParameterSourceProvider">
-            <bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"/>
-        </property>
-    </bean>
-
-    <batch:job id="StopJob" restartable="false" job-repository="jobRepository">
-        <batch:step id="step1">
+    <batch:job id="gtfsJob" restartable="false" job-repository="jobRepository">
+        <batch:step id="stopStep" next="agencyStep">
             <tasklet>
                 <chunk reader="stopItemReader"
                        writer="stopItemWriter"
+                       commit-interval="10000"/>
+                <!--TODO Set appropriate commit-interval value-->
+            </tasklet>
+        </batch:step>
+        <batch:step id="agencyStep" next="calendarStep">
+            <tasklet>
+                <chunk reader="agencyItemReader"
+                       writer="agencyItemWriter"
+                       commit-interval="10000"/>
+                <!--TODO Set appropriate commit-interval value-->
+            </tasklet>
+        </batch:step>
+        <batch:step id="calendarStep">
+            <tasklet>
+                <chunk reader="calendarItemReader"
+                       writer="calendarItemWriter"
                        commit-interval="10000"/>
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>
