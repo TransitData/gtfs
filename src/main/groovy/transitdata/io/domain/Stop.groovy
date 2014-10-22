@@ -15,8 +15,8 @@ class Stop {
     String stop_code
     String stop_name
     String stop_desc
-    String stop_lat
-    String stop_lon
+    Double stop_lat
+    Double stop_lon
     String stop_street
     String stop_city
     String stop_region
