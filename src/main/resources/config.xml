@@ -15,6 +15,7 @@
     <import resource="agency-config.xml"/>
     <import resource="stop-config.xml"/>
     <import resource="calendar-config.xml"/>
+    <import resource="calendardate-config.xml"/>
 
     <!--Load our properties file-->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -80,10 +81,18 @@
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>
         </batch:step>
-        <batch:step id="routeStep">
+        <batch:step id="routeStep" next="calendarDateStep">
             <tasklet>
                 <chunk reader="routeItemReader"
                        writer="routeItemWriter"
+                       commit-interval="10000"/>
+                <!--TODO Set appropriate commit-interval value-->
+            </tasklet>
+        </batch:step>
+        <batch:step id="calendarDateStep">
+            <tasklet>
+                <chunk reader="calendarDateItemReader"
+                       writer="calendarDateItemWriter"
                        commit-interval="10000"/>
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>
