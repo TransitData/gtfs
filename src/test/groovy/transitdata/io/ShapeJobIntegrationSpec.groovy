@@ -43,7 +43,7 @@ class ShapeJobIntegrationSpec extends Specification {
                 shape_id : '20001',
                 shape_pt_lat : '44.9617268795',
                 shape_pt_lon : '-93.2921253393',
-                shape_pt_sequence : new Integer(10001),
+                shape_pt_sequence : 10001,
                 shape_dist_traveled : null
         )
 
