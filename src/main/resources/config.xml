@@ -111,7 +111,6 @@
                 <chunk reader="stoptimeItemReader"
                        writer="stoptimeItemWriter"
                        commit-interval="10000"/>
-                <!--TODO Set appropriate commit-interval value-->
             </tasklet>
         </batch:step>
     </batch:job>
