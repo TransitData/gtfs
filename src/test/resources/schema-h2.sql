@@ -178,8 +178,8 @@ CREATE TABLE shape (
   id                  BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
   transit_system      VARCHAR(50)           NOT NULL,
   shape_id            VARCHAR(100)          NOT NULL,
-  shape_pt_lat        DECIMAL(8, 6)         NOT NULL,
-  shape_pt_lon        DECIMAL(8, 6)         NOT NULL,
+  shape_pt_lat        DECIMAL(12, 10)         NOT NULL,
+  shape_pt_lon        DECIMAL(12, 10)         NOT NULL,
   shape_pt_sequence   INT                   NOT NULL,
   shape_dist_traveled VARCHAR(50)
 );
