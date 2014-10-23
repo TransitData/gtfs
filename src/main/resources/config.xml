@@ -17,6 +17,7 @@
     <import resource="calendar-config.xml"/>
     <import resource="calendardate-config.xml"/>
     <import resource="stoptime-config.xml"/>
+    <import resource="trip-config.xml"/>
 
     <!--Load our properties file-->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
