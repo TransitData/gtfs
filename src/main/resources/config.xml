@@ -17,6 +17,7 @@
     <import resource="calendar-config.xml"/>
     <import resource="calendardate-config.xml"/>
     <import resource="stoptime-config.xml"/>
+    <import resource="trip-config.xml"/>
 
     <!--Load our properties file-->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -98,10 +99,18 @@
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>
         </batch:step>
-        <batch:step id="stoptimeStep">
+        <batch:step id="stoptimeStep" next="tripStep">
             <tasklet>
                 <chunk reader="stoptimeItemReader"
                        writer="stoptimeItemWriter"
+                       commit-interval="10000"/>
+                <!--TODO Set appropriate commit-interval value-->
+            </tasklet>
+        </batch:step>
+        <batch:step id="tripStep">
+            <tasklet>
+                <chunk reader="tripItemReader"
+                       writer="tripItemWriter"
                        commit-interval="10000"/>
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>
