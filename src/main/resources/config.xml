@@ -89,10 +89,18 @@
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>
         </batch:step>
-        <batch:step id="calendarDateStep">
+        <batch:step id="calendarDateStep" next="tripStep">
             <tasklet>
                 <chunk reader="calendarDateItemReader"
                        writer="calendarDateItemWriter"
+                       commit-interval="10000"/>
+                <!--TODO Set appropriate commit-interval value-->
+            </tasklet>
+        </batch:step>
+        <batch:step id="tripStep">
+            <tasklet>
+                <chunk reader="tripItemReader"
+                       writer="tripItemWriter"
                        commit-interval="10000"/>
                 <!--TODO Set appropriate commit-interval value-->
             </tasklet>
