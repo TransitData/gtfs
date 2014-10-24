@@ -27,7 +27,7 @@ class Stop {
     String location_type
     String parent_station
     String stop_timezone
-    String wheelchair_boarding
+    Integer wheelchair_boarding
 
 }
 
