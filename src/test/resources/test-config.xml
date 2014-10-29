@@ -2,22 +2,28 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-ftp="http://www.springframework.org/schema/integration/ftp"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd
-
-     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    http://www.springframework.org/schema/integration
+    http://www.springframework.org/schema/integration/spring-integration.xsd
+    http://www.springframework.org/schema/integration/ftp
+	http://www.springframework.org/schema/integration/ftp/spring-integration-ftp.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--Test only-->
     <bean class="org.springframework.batch.test.JobLauncherTestUtils"/>
 
-    <context:component-scan base-package="transitdata.io.domain"/>
-
     <!--Load our properties file-->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="batch.test.properties"/>
-    </bean>
+    <context:property-placeholder
+            location="classpath:batch.test.properties"
+            ignore-unresolvable="true"/>
 
     <bean id="headerHandler" class="transitdata.io.batch.HeaderHandler"/>
+    <bean id="lineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+        <property name="strict" value="false"/>
+    </bean>
 
     <!-- Initialize the database before every test case: -->
     <bean id="dataSourceInitializer" class="org.springframework.batch.test.DataSourceInitializer">
