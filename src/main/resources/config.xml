@@ -28,8 +28,7 @@
             ignore-unresolvable="true"/>
 
     <bean class="java.net.URI" id="dbUrl">
-        <!--<constructor-arg value="${DATABASE_URL}"/>-->
-        <constructor-arg value="postgres://postgres:postgres@localhost:5432/gtfs"/>
+        <constructor-arg value="${DATABASE_URL}"/>
     </bean>
 
     <bean id="headerHandler" class="transitdata.io.batch.HeaderHandler"/>
@@ -40,17 +39,11 @@
 
     <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
         <property name="driverClass" value="org.postgresql.Driver"/>
-        <!--<property name="jdbcUrl"-->
-                  <!--value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() +-->
-                  <!--'?sslfactory=org.postgresql.ssl.NonValidatingFactory&amp;ssl=true'}"/>-->
-        <!--<property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>-->
-        <!--<property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>-->
-
         <property name="jdbcUrl"
-                  value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath()}"/>
-        <!--<property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>-->
-        <!--<property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>-->
-
+                  value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() +
+                  '?sslfactory=org.postgresql.ssl.NonValidatingFactory&amp;ssl=true'}"/>
+        <property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
+        <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
         <property name="connectionTestStatement" value="SELECT 1"/>
     </bean>
 
