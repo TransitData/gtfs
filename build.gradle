@@ -26,10 +26,13 @@ dependencies {
   compile group: 'org.springframework', name: 'spring-tx', version: springVersion
   compile group: 'org.springframework', name: 'spring-jdbc', version: springVersion
   compile group: 'org.springframework', name: 'spring-beans', version: springVersion
+  compile group: 'org.springframework.integration', name: 'spring-integration-core', version: springIntegrationVersion
+  compile group: 'org.springframework.integration', name: 'spring-integration-ftp', version: springIntegrationVersion
 
   compile 'postgresql:postgresql:9.1-901-1.jdbc4'
   compile group: 'com.jolbox', name: 'bonecp-spring', version: '0.8.0.RELEASE'
 
+  compile "org.apache.commons:commons-collections4:${apacheCommonsVersion}"
   compile "org.slf4j:log4j-over-slf4j:${slf4jVersion}"
   compile "ch.qos.logback:logback-classic:${logbackVersion}"
   compile "ch.qos.logback:logback-core:${logbackVersion}"

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/batch
+    http://www.springframework.org/schema/batch/spring-batch.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="../test-config.xml"/>
+    <context:annotation-config/>
+    <bean class="transitdata.io.config.FtpConfiguration"/>
+
+    <bean id="lineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+        <property name="strict" value="false"/>
+    </bean>
+
+    <bean id="fileUnzipperTasklet" class="transitdata.io.batch.FileUnzipperTasklet" />
+
+    <batch:job id="FTPJob" restartable="false" job-repository="jobRepository">
+        <batch:step id="step1">
+            <batch:tasklet ref="ftpGetRemoteFilesTasklet" />
+        </batch:step>
+    </batch:job>
+</beans>

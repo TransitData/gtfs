@@ -12,7 +12,7 @@
     http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="transitdata.io.domain"/>
+    <context:component-scan base-package="transitdata.io"/>
 
     <import resource="agency-config.xml"/>
     <import resource="stop-config.xml"/>
@@ -23,15 +23,19 @@
     <import resource="trip-config.xml"/>
 
     <!--Load our properties file-->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="batch.properties"/>
-    </bean>
+    <context:property-placeholder
+            location="classpath:batch.properties, classpath:ftp.properties"
+            ignore-unresolvable="true"/>
 
     <bean class="java.net.URI" id="dbUrl">
         <constructor-arg value="${DATABASE_URL}"/>
     </bean>
 
     <bean id="headerHandler" class="transitdata.io.batch.HeaderHandler"/>
+
+    <bean id="lineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+        <property name="strict" value="false"/>
+    </bean>
 
     <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
         <property name="driverClass" value="org.postgresql.Driver"/>
@@ -68,6 +72,12 @@
     </bean>
 
     <batch:job id="gtfsJob" restartable="false" job-repository="jobRepository">
+        <batch:step id="ftpStep" next="fileUnzipperStep">
+            <batch:tasklet ref="ftpGetRemoteFilesTasklet" />
+        </batch:step>
+        <batch:step id="fileUnzipperStep" next="stopStep">
+            <batch:tasklet ref="fileUnzipperTasklet" />
+        </batch:step>
         <batch:step id="stopStep" next="agencyStep">
             <tasklet>
                 <chunk reader="stopItemReader"
