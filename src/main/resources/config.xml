@@ -4,136 +4,133 @@
        xmlns:batch="http://www.springframework.org/schema/batch"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-       xsi:schemaLocation="http://www.springframework.org/schema/batch
-    http://www.springframework.org/schema/batch/spring-batch.xsd
-    http://www.springframework.org/schema/jdbc
-    http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
-    http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans.xsd
-    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+    http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd ">
 
-    <context:component-scan base-package="transitdata.io"/>
+  <context:component-scan base-package="transitdata.io"/>
 
-    <import resource="agency-config.xml"/>
-    <import resource="stop-config.xml"/>
-    <import resource="calendar-config.xml"/>
-    <import resource="calendardate-config.xml"/>
-    <import resource="route-config.xml"/>
-    <import resource="stoptime-config.xml"/>
-    <import resource="trip-config.xml"/>
+  <import resource="agency-config.xml"/>
+  <import resource="stop-config.xml"/>
+  <import resource="calendar-config.xml"/>
+  <import resource="calendardate-config.xml"/>
+  <import resource="route-config.xml"/>
+  <import resource="stoptime-config.xml"/>
+  <import resource="trip-config.xml"/>
 
-    <!--Load our properties file-->
-    <context:property-placeholder
-            location="classpath:batch.properties, classpath:ftp.properties"
-            ignore-unresolvable="true"/>
+  <!--Load our properties file-->
+  <context:property-placeholder
+    location="classpath:batch.properties, classpath:ftp.properties"
+    ignore-unresolvable="true"/>
 
-    <bean class="java.net.URI" id="dbUrl">
-        <constructor-arg value="${DATABASE_URL}"/>
-    </bean>
+  <bean class="java.net.URI" id="dbUrl">
+    <constructor-arg value="${DATABASE_URL}"/>
+  </bean>
 
-    <bean id="headerHandler" class="transitdata.io.batch.HeaderHandler"/>
+  <bean id="headerHandler" class="transitdata.io.batch.HeaderHandler"/>
 
-    <bean id="lineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
-        <property name="strict" value="false"/>
-    </bean>
+  <bean id="lineTokenizer" class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+    <property name="strict" value="false"/>
+  </bean>
 
-    <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-        <property name="driverClass" value="org.postgresql.Driver"/>
-        <property name="jdbcUrl"
-                  value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() +
+  <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+    <property name="driverClass" value="org.postgresql.Driver"/>
+    <property name="jdbcUrl"
+              value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() +
                   '?sslfactory=org.postgresql.ssl.NonValidatingFactory&amp;ssl=true'}"/>
-        <property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
-        <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
-        <property name="connectionTestStatement" value="SELECT 1"/>
-    </bean>
+    <property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
+    <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
+    <property name="connectionTestStatement" value="SELECT 1"/>
+  </bean>
 
-    <!-- create job-meta tables automatically -->
-    <jdbc:initialize-database data-source="dataSource">
-        <jdbc:script location="classpath:schema-drop-postgres.sql" />
-        <jdbc:script location="classpath:schema-postgres.sql" />
-    </jdbc:initialize-database>
+  <!-- create job-meta tables automatically -->
+  <jdbc:initialize-database data-source="dataSource">
+    <jdbc:script location="classpath:schema-drop-postgres.sql"/>
+    <jdbc:script location="classpath:schema-postgres.sql"/>
+  </jdbc:initialize-database>
 
-    <bean id="transactionManager"
-          class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
-          lazy-init="true">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
+  <bean id="transactionManager"
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+        lazy-init="true">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
 
-    <bean id="jobRepository"
-          class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="databaseType" value="POSTGRES"/>
-    </bean>
+  <bean id="jobRepository"
+        class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="transactionManager" ref="transactionManager"/>
+    <property name="databaseType" value="POSTGRES"/>
+  </bean>
 
-    <bean id="jobLauncher"
-          class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
-        <property name="jobRepository" ref="jobRepository"/>
-    </bean>
+  <bean id="jobLauncher"
+        class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+    <property name="jobRepository" ref="jobRepository"/>
+  </bean>
 
-    <batch:job id="gtfsJob" restartable="false" job-repository="jobRepository">
-        <batch:step id="ftpStep" next="fileUnzipperStep">
-            <batch:tasklet ref="ftpGetRemoteFilesTasklet" />
-        </batch:step>
-        <batch:step id="fileUnzipperStep" next="stopStep">
-            <batch:tasklet ref="fileUnzipperTasklet" />
-        </batch:step>
-        <batch:step id="stopStep" next="agencyStep">
-            <tasklet>
-                <chunk reader="stopItemReader"
-                       writer="stopItemWriter"
-                       commit-interval="10000"/>
-                <!--TODO Set appropriate commit-interval value-->
-            </tasklet>
-        </batch:step>
-        <batch:step id="agencyStep" next="calendarStep">
-            <tasklet>
-                <chunk reader="agencyItemReader"
-                       writer="agencyItemWriter"
-                       commit-interval="10000"/>
-                <!--TODO Set appropriate commit-interval value-->
-            </tasklet>
-        </batch:step>
-        <batch:step id="calendarStep" next="routeStep">
-            <tasklet>
-                <chunk reader="calendarItemReader"
-                       writer="calendarItemWriter"
-                       commit-interval="10000"/>
-                <!--TODO Set appropriate commit-interval value-->
-            </tasklet>
-        </batch:step>
-        <batch:step id="routeStep" next="calendarDateStep">
-            <tasklet>
-                <chunk reader="routeItemReader"
-                       writer="routeItemWriter"
-                       commit-interval="10000"/>
-                <!--TODO Set appropriate commit-interval value-->
-            </tasklet>
-        </batch:step>
-        <batch:step id="calendarDateStep" next="stoptimeStep">
-            <tasklet>
-                <chunk reader="calendarDateItemReader"
-                       writer="calendarDateItemWriter"
-                       commit-interval="10000"/>
-                <!--TODO Set appropriate commit-interval value-->
-            </tasklet>
-        </batch:step>
-        <batch:step id="stoptimeStep" next="tripStep">
-            <tasklet>
-                <chunk reader="stoptimeItemReader"
-                       writer="stoptimeItemWriter"
-                       commit-interval="10000"/>
-                <!--TODO Set appropriate commit-interval value-->
-            </tasklet>
-        </batch:step>
-        <batch:step id="tripStep">
-            <tasklet>
-                <chunk reader="tripItemReader"
-                       writer="tripItemWriter"
-                       commit-interval="10000"/>
-                <!--TODO Set appropriate commit-interval value-->
-            </tasklet>
-        </batch:step>
-    </batch:job>
+  <batch:job id="gtfsJob" restartable="false" job-repository="jobRepository">
+    <batch:step id="ftpStep" next="fileUnzipperStep">
+      <batch:tasklet ref="ftpGetRemoteFilesTasklet"/>
+    </batch:step>
+    <batch:step id="fileUnzipperStep" next="stopStep">
+      <batch:tasklet ref="fileUnzipperTasklet"/>
+    </batch:step>
+    <batch:step id="stopStep" next="agencyStep">
+      <tasklet>
+        <chunk reader="stopItemReader"
+               writer="stopItemWriter"
+               commit-interval="10000"/>
+        <!--TODO Set appropriate commit-interval value-->
+      </tasklet>
+    </batch:step>
+    <batch:step id="agencyStep" next="calendarStep">
+      <tasklet>
+        <chunk reader="agencyItemReader"
+               writer="agencyItemWriter"
+               commit-interval="10000"/>
+        <!--TODO Set appropriate commit-interval value-->
+      </tasklet>
+    </batch:step>
+    <batch:step id="calendarStep" next="routeStep">
+      <tasklet>
+        <chunk reader="calendarItemReader"
+               writer="calendarItemWriter"
+               commit-interval="10000"/>
+        <!--TODO Set appropriate commit-interval value-->
+      </tasklet>
+    </batch:step>
+    <batch:step id="routeStep" next="calendarDateStep">
+      <tasklet>
+        <chunk reader="routeItemReader"
+               writer="routeItemWriter"
+               commit-interval="10000"/>
+        <!--TODO Set appropriate commit-interval value-->
+      </tasklet>
+    </batch:step>
+    <batch:step id="calendarDateStep" next="stoptimeStep">
+      <tasklet>
+        <chunk reader="calendarDateItemReader"
+               writer="calendarDateItemWriter"
+               commit-interval="10000"/>
+        <!--TODO Set appropriate commit-interval value-->
+      </tasklet>
+    </batch:step>
+    <batch:step id="stoptimeStep" next="tripStep">
+      <tasklet>
+        <chunk reader="stoptimeItemReader"
+               writer="stoptimeItemWriter"
+               commit-interval="10000"/>
+        <!--TODO Set appropriate commit-interval value-->
+      </tasklet>
+    </batch:step>
+    <batch:step id="tripStep">
+      <tasklet>
+        <chunk reader="tripItemReader"
+               writer="tripItemWriter"
+               commit-interval="10000"/>
+        <!--TODO Set appropriate commit-interval value-->
+      </tasklet>
+    </batch:step>
+  </batch:job>
 
 </beans>
