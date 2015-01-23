@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
+
 buildscript {
   repositories { jcenter() }
   dependencies {
@@ -12,6 +14,12 @@ apply plugin: 'application'
 apply plugin: 'codenarc'
 apply plugin: 'findbugs'
 
+shadowJar {
+  transform(ServiceFileTransformer) {
+    path = 'META-INF'
+    include 'spring.*'
+  }
+}
 
 repositories {
   mavenCentral()
